@@ -1,48 +1,103 @@
 ```mermaid
 classDiagram
-    class ASRSGateway {
-        +send_command(command): ASRSResponse
-        +get_response(): ASRSResponse
-        +get_status(): string
-        +set_adapter(adapter)
+    class Warehouse {
+        +inventory
+        +automationWorkflow
+        +storeItem()
+        +retrieveItem()
+        +upgrade()
+        +replace()
     }
-    class ASRSCommand {
-        -command_type: string
-        -parameters: dict
-        +to_json(): string
+
+    class MasterRoboticsControlDispatcher {
+        +taskQueue
+        +commandInterface
+        +sendCommand()
+        +use()
+        +respond()
     }
-    class ASRSResponse {
-        -response_data: dict
-        +is_successful(): bool
-        +get_data(): dict
+
+    class SoftwareGateway {
+        +hardwareProtocols
+        +systemState
+        +errorLog
+        +act()
+        +translate()
+        +hide()
+        +offer()
+        +communicate()
+        +track()
+        +manage()
+        +detect()
+        +report()
+        +handle()
+        +ensure()
+        +update()
+        +monitor()
+        +confirm()
+        +adapt()
     }
-    class ASRSAdapter {
-        <<abstract>>
-        +translate_command(command): string
-        +translate_response(response): ASRSResponse
-        +send(data)
-        +receive(): string
+
+    class ASRS {
+        +equipmentList
+        +vendorSystem
+        +itemLocations
+        +store()
+        +move()
+        +work()
+        +respond()
     }
-    class CraneAdapter {
-        +translate_command(command): string
-        +translate_response(response): ASRSResponse
+
+    class Hardware {
+        +type
+        +vendor
+        +state
+        +understand()
+        +do()
     }
-    class ShuttleAdapter {
-        +translate_command(command): string
-        +translate_response(response): ASRSResponse
+
+    class Crane
+    class Shuttle
+    class VerticalLiftModule
+
+    class Item {
+        +binId
+        +location
+        +retrieve()
     }
-    class VerticalLiftModuleAdapter {
-        +translate_command(command): string
-        +translate_response(response): ASRSResponse
+
+    class Task {
+        +taskId
+        +status
+        +assignedEquipment
+        +complete()
+        +fail()
     }
-    class ASRSErrorHandler {
-        +handle_error(error_code, error_message)
+
+    class Error {
+        +errorCode
+        +errorMessage
+        +detect()
+        +report()
     }
-    ASRSGateway ..> ASRSCommand
-    ASRSGateway ..> ASRSResponse
-    ASRSGateway "1" -- "1" ASRSAdapter
-    ASRSGateway ..> ASRSErrorHandler
-    ASRSAdapter --|> CraneAdapter
-    ASRSAdapter --|> ShuttleAdapter
-    ASRSAdapter --|> VerticalLiftModuleAdapter
+
+    class Protocol {
+        +vendorId
+        +commandSet
+        +translate()
+    }
+
+    %% Relationships
+    Warehouse --> MasterRoboticsControlDispatcher
+    MasterRoboticsControlDispatcher --> SoftwareGateway
+    SoftwareGateway --> ASRS
+    ASRS --> Hardware
+    Hardware <|-- Crane
+    Hardware <|-- Shuttle
+    Hardware <|-- VerticalLiftModule
+    ASRS --> Item
+    ASRS --> Task
+    SoftwareGateway --> Error
+    SoftwareGateway --> Protocol
+
 ```
