@@ -42,7 +42,7 @@ classDiagram
     ASRSGateway ..> ASRSResponse
     ASRSGateway "1" -- "1" ASRSAdapter
     ASRSGateway ..> ASRSErrorHandler
-    ASRSAdapter <|-- CraneAdapter
-    ASRSAdapter <|-- ShuttleAdapter
-    ASRSAdapter <|-- VerticalLiftModuleAdapter
+    ASRSAdapter --|> CraneAdapter
+    ASRSAdapter --|> ShuttleAdapter
+    ASRSAdapter --|> VerticalLiftModuleAdapter
 ```
