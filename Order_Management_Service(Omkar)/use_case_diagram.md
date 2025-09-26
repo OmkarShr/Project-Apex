@@ -1,6 +1,3 @@
-# Order Management Service - Use Case Diagram
-
-## Comprehensive Use Case Diagram with All Module Connections
 
 ```mermaid
 graph TD
@@ -140,65 +137,3 @@ graph TD
     class CreateOrder,GetOrder,CancelOrder,TrackOrder,UpdateOrderStatus,ReserveInventory,ValidateOrder,ProcessPayment,CalculateTotal,ModifyOrder useCaseClass
     class FraudDetectionService,InventoryService,FulfillmentService,ShippingService,NotificationService,PaymentService,IAMService,ProductCatalogService,RoutePlanningService,DeliveryTrackingService,AnalyticsService,PredictiveService,ReturnsService externalServiceClass
 ```
-
-## Use Case Diagram Explanation
-
-### Primary Actors
-1. **Customer** - End user placing and tracking orders
-2. **Warehouse Manager** - Oversees order processing and fulfillment
-3. **System Administrator** - Manages system access and security
-4. **Picker** - Warehouse worker fulfilling orders
-5. **Driver** - Delivery personnel
-6. **Customer Service Rep** - Handles customer inquiries and issues
-
-### Core Use Cases
-1. **Create Order** - Primary use case for order creation
-2. **Get Order Details** - Retrieve order information
-3. **Cancel Order** - Cancel existing orders
-4. **Track Order Status** - Monitor order progress
-5. **Update Order Status** - Change order state
-6. **Reserve Inventory** - Allocate stock for orders
-
-### Include Relationships (Required)
-- **Validate Order** is included in Create Order
-- **Check for Fraud** is included in Create Order
-- **Reserve Inventory** is included in Create Order
-- **Process Payment** is included in Create Order
-- **Authenticate User** is included in Create Order
-- **Authorize Access** is included in Create Order
-- **Get Product Information** is included in Create Order
-
-### Extend Relationships (Optional)
-- **Modify Order** extends Create Order (for order changes)
-- **Calculate Total** extends Create Order (for pricing)
-- **Track Delivery** extends Track Order (for delivery tracking)
-- **Capture Proof of Delivery** extends Update Order Status
-- **Optimize Route** extends Request Fulfillment
-- **Generate Shipping Label** extends Notify Shipped
-- **Generate Report** extends Get Order (for analytics)
-- **Predict Demand** extends Reserve Inventory (for forecasting)
-
-### External Service Connections
-The Order Management Service connects to all 19 other modules:
-
-1. **Identity & Access Management (Nidhi)** - Authentication and authorization
-2. **Product Catalog Service (Shivani)** - Product information
-3. **Inventory Management & Location Service (Joshua)** - Stock management
-4. **Picking & Packing Orchestration Engine (Kushi)** - Fulfillment
-5. **Shipping & Manifest Service (Rahul)** - Shipping operations
-6. **Reverse Logistics Module (Aadi)** - Returns processing
-7. **Customer Notification & Proof of Delivery Service (John)** - Customer communications
-8. **Analytics & Reporting Dashboard (Prasham)** - Business intelligence
-9. **Billing and Payment Subsystem (Aditya Vilas)** - Financial transactions
-10. **Fleet & Vehicle Management Service (Aadi)** - Delivery fleet
-11. **Route Planning & Optimization Engine (Megh)** - Delivery optimization
-12. **Real-Time Delivery Tracking & Driver Interface (Swastik)** - Delivery tracking
-13. **Customer Relations Module (Sameet)** - Customer support
-14. **Master Robotics Control & Task Dispatcher (Purva)** - Automation control
-15. **Autonomous Mobile Robot Control System (Saransh)** - AMR operations
-16. **Automated Storage/Retrieval Gateway (Arjun)** - AS/RS operations
-17. **Aerial Drone Inventory Auditing System (Madhav)** - Inventory auditing
-18. **Predictive Intelligence Engine (Tushar)** - AI/ML predictions
-19. **Inbound Logistics & Receiving Module (Riddhimman)** - Receiving operations
-
-This comprehensive use case diagram demonstrates how the Order Management Service serves as the central orchestration hub, connecting to every other module in the smart warehouse ecosystem while maintaining clear include and extend relationships for proper use case modeling.
