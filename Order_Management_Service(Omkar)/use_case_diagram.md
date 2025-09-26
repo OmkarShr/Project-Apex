@@ -1,140 +1,148 @@
-@startuml
-title Order Management Service Use Case Diagram
-
-!define ACTOR_COLOR #e1f5fe
-!define USE_CASE_COLOR #f3e5f5
-!define EXTERNAL_SERVICE_COLOR #fff3e0
-!define INCLUDE_COLOR #c8e6c9
-!define EXTEND_COLOR #ffcdd2
+@startuml Order Management Service Use Case Diagram
 
 skinparam actor {
-    BackgroundColor ACTOR_COLOR
+    BackgroundColor #e1f5fe
     BorderColor #01579b
     BorderThickness 2
 }
 
 skinparam usecase {
-    BackgroundColor USE_CASE_COLOR
+    BackgroundColor #f3e5f5
     BorderColor #4a148c
     BorderThickness 2
 }
 
 skinparam package {
-    BackgroundColor EXTERNAL_SERVICE_COLOR
+    BackgroundColor #fff3e0
     BorderColor #e65100
     BorderThickness 2
 }
 
-' Actors
-:Customer: as Customer
-:Warehouse Manager: as WarehouseManager
-:System Administrator: as SystemAdmin
-:Picker: as Picker
-:Driver: as Driver
-:Customer Service Rep: as CustomerService
+actor Customer
+actor "Joshua (Warehouse Manager)" as Joshua
+actor "Nidhi (System Admin)" as Nidhi
+actor "Kushi (Picker)" as Kushi
+actor "Swastik (Driver)" as Swastik
+actor "Sameet (Customer Service)" as Sameet
+actor "Rahul (Shipping Manager)" as Rahul
+actor "Aditya Vilas (Payment Manager)" as AdityaVilas
+actor "Prasham (Analytics Manager)" as Prasham
+actor "Purva (Robotics Manager)" as Purva
+actor "Arjun (AS/RS Manager)" as Arjun
+actor "Madhav (Drone Manager)" as Madhav
 
-' Core Use Cases
 rectangle "Order Management Service" {
-    (Create Order) as CreateOrder
-    (Get Order Details) as GetOrder
-    (Cancel Order) as CancelOrder
-    (Track Order Status) as TrackOrder
-    (Update Order Status) as UpdateOrderStatus
-    (Reserve Inventory) as ReserveInventory
-    (Validate Order) as ValidateOrder
-    (Process Payment) as ProcessPayment
-    (Calculate Order Total) as CalculateTotal
-    (Modify Order) as ModifyOrder
+    usecase "Create Order" as CreateOrder
+    usecase "Get Order Details" as GetOrder
+    usecase "Cancel Order" as CancelOrder
+    usecase "Track Order Status" as TrackOrder
+    usecase "Update Order Status" as UpdateOrderStatus
+    usecase "Reserve Inventory" as ReserveInventory
+    usecase "Validate Order" as ValidateOrder
+    usecase "Process Payment" as ProcessPayment
+    usecase "Calculate Order Total" as CalculateTotal
+    usecase "Modify Order" as ModifyOrder
 }
 
-' External Service Use Cases
-(Check for Fraud) as CheckFraud
-(Request Fulfillment) as RequestFulfillment
-(Notify Shipped) as NotifyShipped
-(Update Inventory) as UpdateInventory
-(Generate Shipping Label) as GenerateShippingLabel
-(Send Customer Notification) as SendNotification
-(Process Refund) as ProcessRefund
-(Authenticate User) as AuthenticateUser
-(Authorize Access) as AuthorizeAccess
-(Get Product Information) as GetProductInfo
-(Optimize Delivery Route) as OptimizeRoute
-(Track Delivery) as TrackDelivery
-(Capture Proof of Delivery) as CapturePOD
-(Generate Analytics Report) as GenerateReport
-(Predict Demand) as PredictDemand
+usecase "Check for Fraud" as CheckFraud
+usecase "Request Fulfillment" as RequestFulfillment
+usecase "Notify Shipped" as NotifyShipped
+usecase "Update Inventory" as UpdateInventory
+usecase "Generate Shipping Label" as GenerateShippingLabel
+usecase "Send Customer Notification" as SendNotification
+usecase "Process Refund" as ProcessRefund
+usecase "Authenticate User" as AuthenticateUser
+usecase "Authorize Access" as AuthorizeAccess
+usecase "Get Product Information" as GetProductInfo
+usecase "Optimize Delivery Route" as OptimizeRoute
+usecase "Track Delivery" as TrackDelivery
+usecase "Capture Proof of Delivery" as CapturePOD
+usecase "Generate Analytics Report" as GenerateReport
+usecase "Predict Demand" as PredictDemand
 
-' External Services Package
 package "External Services" {
-    [Fraud Detection Service] as FraudDetectionService
-    [Inventory Management Service] as InventoryService
-    [Picking & Packing Engine] as FulfillmentService
-    [Shipping & Manifest Service] as ShippingService
-    [Customer Notification Service] as NotificationService
-    [Billing & Payment Subsystem] as PaymentService
-    [Identity & Access Management] as IAMService
-    [Product Catalog Service] as ProductCatalogService
-    [Route Planning Engine] as RoutePlanningService
-    [Delivery Tracking Service] as DeliveryTrackingService
-    [Analytics & Reporting] as AnalyticsService
-    [Predictive Intelligence Engine] as PredictiveService
-    [Reverse Logistics Module] as ReturnsService
+    component [Fraud Detection Service] as FraudDetectionService
+    component [Inventory Management Service] as InventoryService
+    component [Picking & Packing Engine] as FulfillmentService
+    component [Shipping & Manifest Service] as ShippingService
+    component [Customer Notification Service] as NotificationService
+    component [Billing & Payment Subsystem] as PaymentService
+    component [Identity & Access Management] as IAMService
+    component [Product Catalog Service] as ProductCatalogService
+    component [Route Planning Engine] as RoutePlanningService
+    component [Delivery Tracking Service] as DeliveryTrackingService
+    component [Analytics & Reporting] as AnalyticsService
+    component [Predictive Intelligence Engine] as PredictiveService
+    component [Reverse Logistics Module] as ReturnsService
 }
 
-' Actor to Use Case Relationships
 Customer --> CreateOrder
 Customer --> GetOrder
 Customer --> CancelOrder
 Customer --> TrackOrder
 Customer --> ModifyOrder
 
-WarehouseManager --> GetOrder
-WarehouseManager --> UpdateOrderStatus
-WarehouseManager --> GenerateReport
+Joshua --> GetOrder
+Joshua --> UpdateOrderStatus
+Joshua --> GenerateReport
 
-SystemAdmin --> AuthenticateUser
-SystemAdmin --> AuthorizeAccess
-SystemAdmin --> GenerateReport
+Nidhi --> AuthenticateUser
+Nidhi --> AuthorizeAccess
+Nidhi --> GenerateReport
 
-Picker --> RequestFulfillment
-Picker --> AuthorizeAccess
+Kushi --> RequestFulfillment
+Kushi --> AuthorizeAccess
 
-Driver --> TrackDelivery
-Driver --> CapturePOD
-Driver --> AuthorizeAccess
+Swastik --> TrackDelivery
+Swastik --> CapturePOD
+Swastik --> AuthorizeAccess
 
-CustomerService --> GetOrder
-CustomerService --> CancelOrder
-CustomerService --> ProcessRefund
-CustomerService --> SendNotification
+Sameet --> GetOrder
+Sameet --> CancelOrder
+Sameet --> ProcessRefund
+Sameet --> SendNotification
 
-' Include Relationships
-CreateOrder .> ValidateOrder : <<include>>
-CreateOrder .> CheckFraud : <<include>>
-CreateOrder .> ReserveInventory : <<include>>
-CreateOrder .> ProcessPayment : <<include>>
-CreateOrder .> AuthenticateUser : <<include>>
-CreateOrder .> AuthorizeAccess : <<include>>
-CreateOrder .> GetProductInfo : <<include>>
+Rahul --> NotifyShipped
+Rahul --> GenerateShippingLabel
 
-UpdateOrderStatus .> AuthorizeAccess : <<include>>
-ReserveInventory .> UpdateInventory : <<include>>
-RequestFulfillment .> AuthorizeAccess : <<include>>
-NotifyShipped .> SendNotification : <<include>>
-CancelOrder .> ProcessRefund : <<include>>
-CancelOrder .> UpdateInventory : <<include>>
+AdityaVilas --> ProcessPayment
+AdityaVilas --> ProcessRefund
 
-' Extend Relationships
-ModifyOrder ..> CreateOrder : <<extend>>
-CalculateTotal ..> CreateOrder : <<extend>>
-TrackDelivery ..> TrackOrder : <<extend>>
-CapturePOD ..> UpdateOrderStatus : <<extend>>
-OptimizeRoute ..> RequestFulfillment : <<extend>>
-GenerateShippingLabel ..> NotifyShipped : <<extend>>
-GenerateReport ..> GetOrder : <<extend>>
-PredictDemand ..> ReserveInventory : <<extend>>
+Prasham --> GenerateReport
 
-' External Service Connections
+Purva --> RequestFulfillment
+Purva --> AuthorizeAccess
+
+Arjun --> RequestFulfillment
+Arjun --> AuthorizeAccess
+
+Madhav --> UpdateInventory
+Madhav --> AuthorizeAccess
+
+CreateOrder .> ValidateOrder : include
+CreateOrder .> CheckFraud : include
+CreateOrder .> ReserveInventory : include
+CreateOrder .> ProcessPayment : include
+CreateOrder .> AuthenticateUser : include
+CreateOrder .> AuthorizeAccess : include
+CreateOrder .> GetProductInfo : include
+
+UpdateOrderStatus .> AuthorizeAccess : include
+ReserveInventory .> UpdateInventory : include
+RequestFulfillment .> AuthorizeAccess : include
+NotifyShipped .> SendNotification : include
+CancelOrder .> ProcessRefund : include
+CancelOrder .> UpdateInventory : include
+
+ModifyOrder .> CreateOrder : extend
+CalculateTotal .> CreateOrder : extend
+TrackDelivery .> TrackOrder : extend
+CapturePOD .> UpdateOrderStatus : extend
+OptimizeRoute .> RequestFulfillment : extend
+GenerateShippingLabel .> NotifyShipped : extend
+GenerateReport .> GetOrder : extend
+PredictDemand .> ReserveInventory : extend
+
 CheckFraud --> FraudDetectionService
 ReserveInventory --> InventoryService
 UpdateInventory --> InventoryService
