@@ -36,6 +36,12 @@ skinparam package {
 :Kushi: as Picker
 :Swastik: as Driver
 :Sameet: as CustomerService
+:Rahul: as ShippingManager
+:Aditya Vilas: as PaymentManager
+:Prasham: as AnalyticsManager
+:Purva: as RoboticsManager
+:Arjun: as ASRSManager
+:Madhav: as DroneManager
 
 ' Core Use Cases
 rectangle "Order Management Service" {
@@ -92,25 +98,43 @@ Customer --> CancelOrder
 Customer --> TrackOrder
 Customer --> ModifyOrder
 
-WarehouseManager --> GetOrder
-WarehouseManager --> UpdateOrderStatus
-WarehouseManager --> GenerateReport
+Joshua --> GetOrder
+Joshua --> UpdateOrderStatus
+Joshua --> GenerateReport
 
-SystemAdmin --> AuthenticateUser
-SystemAdmin --> AuthorizeAccess
-SystemAdmin --> GenerateReport
+Nidhi --> AuthenticateUser
+Nidhi --> AuthorizeAccess
+Nidhi --> GenerateReport
 
-Picker --> RequestFulfillment
-Picker --> AuthorizeAccess
+Kushi --> RequestFulfillment
+Kushi --> AuthorizeAccess
 
-Driver --> TrackDelivery
-Driver --> CapturePOD
-Driver --> AuthorizeAccess
+Swastik --> TrackDelivery
+Swastik --> CapturePOD
+Swastik --> AuthorizeAccess
 
-CustomerService --> GetOrder
-CustomerService --> CancelOrder
-CustomerService --> ProcessRefund
-CustomerService --> SendNotification
+Sameet --> GetOrder
+Sameet --> CancelOrder
+Sameet --> ProcessRefund
+Sameet --> SendNotification
+
+Rahul --> NotifyShipped
+Rahul --> GenerateShippingLabel
+
+Aditya Vilas --> ProcessPayment
+Aditya Vilas --> ProcessRefund
+
+Prasham --> GenerateReport
+Prasham --> GenerateAnalytics
+
+Purva --> RequestFulfillment
+Purva --> AuthorizeAccess
+
+Arjun --> RequestFulfillment
+Arjun --> AuthorizeAccess
+
+Madhav --> UpdateInventory
+Madhav --> AuthorizeAccess
 
 ' Include Relationships
 CreateOrder .> ValidateOrder : <<include>>
@@ -168,6 +192,12 @@ ProcessRefund --> ReturnsService
 4. **Kushi** - Picker fulfilling warehouse orders
 5. **Swastik** - Driver handling delivery operations
 6. **Sameet** - Customer Service Representative handling customer inquiries and issues
+7. **Rahul** - Shipping Manager handling shipping and manifest operations
+8. **Aditya Vilas** - Payment Manager processing billing and payment transactions
+9. **Prasham** - Analytics Manager generating reports and business intelligence
+10. **Purva** - Robotics Manager controlling master robotics and task dispatching
+11. **Arjun** - AS/RS Manager managing automated storage and retrieval systems
+12. **Madhav** - Drone Manager overseeing aerial drone inventory auditing
 
 ### Core Use Cases
 1. **Create Order** - Primary use case for order creation
