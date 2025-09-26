@@ -29,13 +29,13 @@ skinparam package {
     BorderThickness 2
 }
 
-' Actors
+' Actors (with actual team member names)
 :Customer: as Customer
-:Warehouse Manager: as WarehouseManager
-:System Administrator: as SystemAdmin
-:Picker: as Picker
-:Driver: as Driver
-:Customer Service Rep: as CustomerService
+:Warehouse Manager (Joshua): as WarehouseManager
+:System Administrator (Nidhi): as SystemAdmin
+:Picker (Kushi): as Picker
+:Driver (Swastik): as Driver
+:Customer Service Rep (Sameet): as CustomerService
 
 ' Core Use Cases
 rectangle "Order Management Service" {
@@ -161,13 +161,13 @@ ProcessRefund --> ReturnsService
 
 ## Use Case Diagram Explanation
 
-### Primary Actors
+### Primary Actors (with Team Member Names)
 1. **Customer** - End user placing and tracking orders
-2. **Warehouse Manager** - Oversees order processing and fulfillment
-3. **System Administrator** - Manages system access and security
-4. **Picker** - Warehouse worker fulfilling orders
-5. **Driver** - Delivery personnel
-6. **Customer Service Rep** - Handles customer inquiries and issues
+2. **Warehouse Manager (Joshua)** - Oversees order processing and fulfillment
+3. **System Administrator (Nidhi)** - Manages system access and security
+4. **Picker (Kushi)** - Warehouse worker fulfilling orders
+5. **Driver (Swastik)** - Delivery personnel
+6. **Customer Service Rep (Sameet)** - Handles customer inquiries and issues
 
 ### Core Use Cases
 1. **Create Order** - Primary use case for order creation
