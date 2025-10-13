@@ -1,69 +1,92 @@
 ```mermaid
 classDiagram
-    class PickingAndPackingEngine {
-        +create_pick_task(order_id): PickTask
-        +create_pick_batch(strategy): PickBatch
-        +assign_pick_task_to_picker(task_id, picker_id)
-        +assign_pick_task_to_robot(task_id, robot_id)
-        +create_pack_task(order_id): PackTask
-        +assign_pack_task_to_packer(task_id, packer_id)
+ 
+   %% Abstract Class
+    class AbstractRobot {
+      <<abstract>>
+      -int robotId
+      -String status
+      +moveTo(String)
+      +selfCheck()
     }
-    class PickTask {
-        -task_id: string
-        -order_id: string
-        -items_to_pick: list
-        -status: string
-        +update_status(new_status)
+    class AutonomousRobot {
+      -double batteryLevel
+      +navigateWarehouse()
     }
-    class PickBatch {
-        -batch_id: string
-        -tasks: list~PickTask~
-        +add_task(task)
+    class ManualRobot {
+      -String operatorName
+      +overrideControls()
     }
-    class PickingStrategy {
-        <<abstract>>
-        +create_batches(orders): list~PickBatch~
+    %% Interface
+    class ITrackable {
+      <<interface>>
+      +trackProgress(Order)
+      +reportStatus()
     }
-    class BatchPickingStrategy {
-        +create_batches(orders): list~PickBatch~
+    %% Comparator
+    class OrderPriorityComparator {
+      <<Comparator>>
+      +compare(Order, Order)
     }
-    class ZonePickingStrategy {
-        +create_batches(orders): list~PickBatch~
+    %% Core Orchestration
+    class OrchestrationEngine {
+      +processOrder(Order)
+      +allocateRobot(Item)
+      +assignPacking(PackingStation)
     }
-    class WavePickingStrategy {
-        +create_batches(orders): list~PickBatch~
+    class TaskScheduler {
+      +assignTasks(Order)
+      +prioritizeOrders()
     }
-    class PackTask {
-        -task_id: string
-        -order_id: string
-        -items_to_pack: list
-        -status: string
-        +update_status(new_status)
+    class Logger {
+      +recordEvent(String)
+      +generateReport()
     }
+    %% Orders and Items
+    class Order {
+      -int orderId
+      -String status
+      -List~Item~ items
+      +updateStatus(String)
+    }
+    class Item {
+      -int itemId
+      -String name
+      -double weight
+    }
+    class Package {
+      -int packageId
+      -List~Item~ contents
+      +seal()
+    }
+    %% Packing
     class PackingStation {
-        -station_id: string
-        -location: string
-        -status: string
+    
+
+
+
+  -int stationId
+      +packItem(Item)
+      +sealPackage(Package)
     }
-    class Picker {
-        -picker_id: string
-        -name: string
-        -current_task_id: string
-    }
-    class Packer {
-        -packer_id: string
-        -name: string
-        -current_task_id: string
-    }
-    PickingAndPackingEngine ..> PickTask
-    PickingAndPackingEngine ..> PickBatch
-    PickingAndPackingEngine ..> PickingStrategy
-    PickingAndPackingEngine ..> PackTask
-    PickingStrategy <|-- BatchPickingStrategy
-    PickingStrategy <|-- ZonePickingStrategy
-    PickingStrategy <|-- WavePickingStrategy
-    PickBatch "1" -- "*" PickTask
-    PickingAndPackingEngine ..> Picker
-    PickingAndPackingEngine ..> Packer
-    PickingAndPackingEngine ..> PackingStation
+    %% Generalization
+    AutonomousRobot --|> AbstractRobot
+    ManualRobot --|> AbstractRobot
+
+    %% Interface implementation
+    OrchestrationEngine ..|> ITrackable
+
+    %% Comparator usage
+    OrderPriorityComparator ..> Order : compares
+
+    %% Associations
+    OrchestrationEngine --> TaskScheduler : schedules
+    OrchestrationEngine --> Logger : logs
+    OrchestrationEngine --> AbstractRobot : allocates
+    OrchestrationEngine --> PackingStation : assigns
+    TaskScheduler --> Order : manages
+    Order *-- Item : contains
+    Package *-- Item : includes
+    PackingStation *-- Package : creates
+
 ```
