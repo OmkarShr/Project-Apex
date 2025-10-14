@@ -1,99 +1,189 @@
-# Picking & Packing Orchestration Engine Design (Revised)
+# 📦 Picking & Packing Orchestration Engine Design (Final)
 
-## 1. Classes and Member Methods
+## 1. Core Orchestration Classes
 
-### Class: `PickingAndPackingEngine`
-
-The main engine for orchestrating picking and packing.
-
-| Member Method | Purpose |
-| :--- | :--- |
-| `create_pick_task(order_id)` | Creates a new pick task for an order. |
-| `create_pick_batch(strategy)` | Creates a new batch of pick tasks using a given strategy. |
-| `assign_pick_task_to_picker(task_id, picker_id)` | Assigns a pick task to a picker. |
-| `assign_pick_task_to_robot(task_id, robot_id)` | Assigns a pick task to a robot. |
-| `create_pack_task(order_id)` | Creates a new pack task for an order. |
-| `assign_pack_task_to_packer(task_id, packer_id)` | Assigns a pack task to a packer. |
-
-### Class: `PickTask`
-
-Represents a task to pick a set of items.
+### Class: `OrchestrationEngine`
+The central coordinator that manages the entire picking and packing workflow — from receiving orders to assigning robots and packing stations.
 
 | Member Method | Purpose |
 | :--- | :--- |
-| `__init__(task_id, order_id, items_to_pick, status)` | Initializes a new PickTask object. |
-| `update_status(new_status)` | Updates the status of the pick task. |
+| `processOrder(order)` | Initiates processing for an incoming order. |
+| `allocateRobot(item)` | Selects and assigns an appropriate robot for a specific item. |
+| `assignPacking(station)` | Assigns an order or package to a packing station. |
+| `logEvent(event_message)` | Sends an event message to the system logger. |
 
-### Class: `PickBatch`
+---
 
-Represents a batch of pick tasks.
-
-| Member Method | Purpose |
-| :--- | :--- |
-| `__init__(batch_id, tasks)` | Initializes a new PickBatch object. |
-| `add_task(task)` | Adds a task to the batch. |
-
-### Class: `PickingStrategy`
-
-An abstract class for different picking strategies.
+### Class: `TaskScheduler`
+Handles order prioritization, batch scheduling, and efficient distribution of tasks.
 
 | Member Method | Purpose |
 | :--- | :--- |
-| `create_batches(orders)` | Creates batches of pick tasks from a list of orders. |
+| `assignTasks(order)` | Breaks down an order into smaller picking/packing tasks. |
+| `prioritizeOrders()` | Determines the order execution sequence based on urgency and location. |
+| `rescheduleTask(task_id)` | Reallocates or retries a failed task. |
 
-### Class: `BatchPickingStrategy`
+---
 
-A concrete implementation of a picking strategy.
-
-| Member Method | Purpose |
-| :--- | :--- |
-| `create_batches(orders)` | Creates batches based on grouping similar items. |
-
-### Class: `ZonePickingStrategy`
-
-A concrete implementation of a picking strategy.
+### Class: `Logger`
+Responsible for recording activities, tracking errors, and generating performance reports.
 
 | Member Method | Purpose |
 | :--- | :--- |
-| `create_batches(orders)` | Creates batches based on warehouse zones. |
+| `recordEvent(message)` | Logs events or updates from the orchestration process. |
+| `generateReport()` | Produces performance or error reports for analysis. |
 
-### Class: `WavePickingStrategy`
+---
 
-A concrete implementation of a picking strategy.
+## 2. Robot Abstractions
+
+### Abstract Class: `AbstractRobot`
+A generic robot blueprint defining shared behavior for all robot types.
+
+| Member Attribute | Description |
+| :--- | :--- |
+| `robotId` | Unique identifier for each robot. |
+| `status` | Operational status (active, idle, maintenance). |
 
 | Member Method | Purpose |
 | :--- | :--- |
-| `create_batches(orders)` | Creates batches based on timed waves. |
+| `moveTo(location)` | Commands the robot to move to a specific warehouse location. |
+| `selfCheck()` | Runs diagnostics to verify operational readiness. |
 
-### Class: `PackTask`
+---
 
-Represents a task to pack an order.
+### Class: `AutonomousRobot`
+A fully automated robot that navigates and picks items independently.
+
+| Member Attribute | Description |
+| :--- | :--- |
+| `batteryLevel` | Current power level of the robot. |
 
 | Member Method | Purpose |
 | :--- | :--- |
-| `__init__(task_id, order_id, items_to_pack, status)` | Initializes a new PackTask object. |
-| `update_status(new_status)` | Updates the status of the pack task. |
+| `navigateWarehouse()` | Calculates and follows the optimal route to pick items. |
+
+---
+
+### Class: `ManualRobot`
+A robot that is human-operated with safety override controls.
+
+| Member Attribute | Description |
+| :--- | :--- |
+| `operatorName` | Name of the assigned operator. |
+
+| Member Method | Purpose |
+| :--- | :--- |
+| `overrideControls()` | Allows human control during special operations or malfunctions. |
+
+---
+
+## 3. Tracking and Priority Components
+
+### Interface: `ITrackable`
+Defines the standard behavior for objects that can be monitored or reported during operations.
+
+| Member Method | Purpose |
+| :--- | :--- |
+| `trackProgress(order)` | Tracks task execution for a given order. |
+| `reportStatus()` | Returns the real-time status of a task or robot. |
+
+---
+
+### Class: `OrderPriorityComparator`
+A comparator used by the scheduler to determine order execution priority.
+
+| Member Method | Purpose |
+| :--- | :--- |
+| `compare(orderA, orderB)` | Compares two orders based on urgency or delivery deadlines. |
+
+---
+
+## 4. Order and Packing Classes
+
+### Class: `Order`
+Represents a customer order and its items.
+
+| Member Attribute | Description |
+| :--- | :--- |
+| `orderId` | Unique identifier for the order. |
+| `status` | Current order state (pending, picking, packed, shipped). |
+| `items` | List of items included in the order. |
+
+| Member Method | Purpose |
+| :--- | :--- |
+| `updateStatus(new_status)` | Updates the order’s progress. |
+
+---
+
+### Class: `Item`
+Represents a single inventory item to be picked.
+
+| Member Attribute | Description |
+| :--- | :--- |
+| `itemId` | Unique item ID. |
+| `name` | Name of the product. |
+| `weight` | Weight of the item (for packaging optimization). |
+
+---
+
+### Class: `Package`
+Represents a physical container for packed items.
+
+| Member Attribute | Description |
+| :--- | :--- |
+| `packageId` | Unique identifier for the package. |
+| `contents` | List of items contained within. |
+
+| Member Method | Purpose |
+| :--- | :--- |
+| `seal()` | Finalizes and locks the package before shipment. |
+
+---
 
 ### Class: `PackingStation`
+Represents an operational area where packing tasks are performed.
 
-Represents a packing station in the warehouse.
+| Member Attribute | Description |
+| :--- | :--- |
+| `stationId` | Unique identifier for the packing station. |
+| `status` | Current operational state (available, busy, maintenance). |
 
 | Member Method | Purpose |
 | :--- | :--- |
-| `__init__(station_id, location, status)` | Initializes a new PackingStation object. |
+| `packItem(item)` | Packs an individual picked item. |
+| `sealPackage(package)` | Seals a completed package for shipping. |
 
-### Class: `Picker`
+---
 
-Represents a human picker.
+## 5. Relationships Overview
+- **OrchestrationEngine → TaskScheduler** → Schedules and assigns order tasks.  
+- **OrchestrationEngine → AbstractRobot** → Allocates and monitors robot execution.  
+- **OrchestrationEngine → PackingStation** → Assigns packing tasks post-pick completion.  
+- **OrchestrationEngine → Logger** → Logs all operational events.  
+- **TaskScheduler → OrderPriorityComparator** → Uses for order prioritization.  
+- **Order** *contains* **Item(s)** → Items are grouped under each order.  
+- **Package** *includes* **Item(s)** → Packed items ready for shipment.  
+- **PackingStation** *creates* **Package(s)** → Completes physical packing.  
 
-| Member Method | Purpose |
-| :--- | :--- |
-| `__init__(picker_id, name, current_task_id)` | Initializes a new Picker object. |
+---
 
-### Class: `Packer`
+## 6. Design Highlights
+- **Abstract Inheritance:** `AutonomousRobot` and `ManualRobot` extend `AbstractRobot`.  
+- **Interface Implementation:** `OrchestrationEngine` implements `ITrackable` for real-time monitoring.  
+- **Composition:** The engine depends on `TaskScheduler`, `Logger`, and `PackingStation`.  
+- **Comparator Integration:** `OrderPriorityComparator` enforces prioritization logic in scheduling.  
 
-Represents a human packer.
+---
 
-| Member Method | Purpose |
-| :--- | :--- |
-| `__init__(packer_id, name, current_task_id)` | Initializes a new Packer object. |
+## 7. Future Extension Ideas
+- Add **Battery-Aware Task Allocation** in `allocateRobot()` for power efficiency.  
+- Introduce **Dynamic Rebalancing** — reassign active pickers/robots mid-operation.  
+- Implement **AI-based Learning Scheduler** using analytics feedback loops.  
+- Add **Visual Dashboard Hooks** for live warehouse monitoring.  
+
+---
+
+✅ **File Info:**  
+Save as → `modules/picking_packing/design.md`  
+GitHub will automatically render this Markdown with proper tables and formatting.
