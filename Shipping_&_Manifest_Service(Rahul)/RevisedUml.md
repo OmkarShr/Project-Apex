@@ -1,3 +1,4 @@
+```mermaid
 classDiagram
    class Comparable {
        <<interface>>
@@ -96,6 +97,7 @@ classDiagram
 
    Manifest o-- Carrier : includes
    Manifest *-- Shipment : includes
+   ```
 
 
    Carrier o-- CarrierApiService : includes
