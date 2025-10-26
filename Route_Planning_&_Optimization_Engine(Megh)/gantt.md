@@ -1,3 +1,4 @@
+```mermaid
 gantt
     dateFormat  YYYY-MM-DD
     title Route Planning & Optimization Engine — Friday Plan
